@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments :: head (titulo='Administración de Equipo')"></head>
+
+<body>
+
+<div th:replace="fragments :: navbar(userName=${usuario} ? ${usuario.getNombre()} : '',
+                     userId=${usuario} ? ${usuario.getId()} : '')"></div>
+
+<div class="container-fluid">
+
+    <div class="row mt-3">
+        <div class="col">
+            <h2 th:text="'Administración del equipo: ' + ${equipo.nombre}"></h2>
+        </div>
+    </div>
+
+    <div class="row mt-3">
+        <div class="col">
+            <div th:if="${errorCambiarNombre}">
+                <div class="alert alert-danger" th:text="${errorCambiarNombre}"></div>
+            </div>
+            <div th:if="${correctoCambioNombre}">
+                <div class="alert alert-success" th:text="${correctoCambioNombre}"></div>
+            </div>
+            <div th:if="${errorEliminacion}">
+                <div class="alert alert-danger" th:text="${errorEliminacion}"></div>
+            </div>
+            <br>
+            <form th:action="@{'/equipos/' + ${equipoId} + '/cambiarNombre'}" method="post">
+                <div class="form-group">
+                    <input type="text" class="form-control" id="nuevoNombre" name="nuevoNombre" placeholder="Nuevo Nombre del Equipo" required>
+                </div>
+                <button type="submit" class="btn btn-success">Cambiar Nombre</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="row mt-3">
+        <div class="col">
+            <form th:action="@{'/equipos/' + ${equipoId} + '/eliminar'}" method="post">
+                <button type="submit" class="btn btn-danger">Eliminar Equipo</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="row mt-3">
+        <div class="col">
+            <a class="btn btn-primary" th:href="@{/equipos}">Volver a Equipos</a>
+        </div>
+    </div>
+
+</div>
+
+<div th:replace="fragments::javascript"/>
+
+<script th:inline="javascript">
+    /* Función para ocultar alertas después de 5 segundos */
+    function hideAlerts() {
+        setTimeout(function() {
+            var alerts = document.querySelectorAll('.alert');
+            alerts.forEach(function(alert) {
+                alert.style.display = 'none';
+            });
+        }, 5000); // 5000 milisegundos = 5 segundos
+    }
+
+    // Llama a la función al cargar la página
+    document.addEventListener('DOMContentLoaded', function() {
+        hideAlerts();
+    });
+</script>
+
+</body>
+</html>
